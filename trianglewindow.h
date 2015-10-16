@@ -1,31 +1,28 @@
 #ifndef TRIANGLEWINDOW_H
 #define TRIANGLEWINDOW_H
-
+#include <QtGui/QGuiApplication>
+#include <QMouseEvent>
+#include <QKeyEvent>
 #include "openglwindow.h"
+#include "camera.h"
+#include "point.h"
+#include "particule.h"
 
-struct point
-{
-    float x, y ,z;
-};
+#include <time.h>
 
-class paramCamera
-{
-public:
-    float rotX = -45.0;
-    float rotY = -45.0;
-    float ss = 1.0f;
-    float anim = 0.0f;
+#include <QTcpSocket>
+#include <QTimer>
+#include <math.h>
 
-    int etat = 0;
-};
+#define MAX_PARTICULES 700
+#define PI 3.141592653589793238463
 
 class TriangleWindow : public OpenGLWindow
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
-    TriangleWindow();
-    TriangleWindow(int maj);
+    TriangleWindow(quint16 port);
+    TriangleWindow(int maj, quint16 port);
     void initialize();
     void render();
     bool event(QEvent *event);
@@ -37,35 +34,46 @@ public:
     void displayTrianglesC();
     void displayPoints();
     void displayTrianglesTexture();
+    void drawParticules();
 
     void displayColor(float);
 
     void loadMap(QString localPath);
-    void updateParticlesAut();
-    void updateParticlesHiv();
-    paramCamera* c;
-
-    void setSeason(int );
-
-public slots:
+    void connectToServer(quint16 port);
     void updateSeason();
+    void initParticules();
+    void getNormal(Point O, Point X, Point Y);
+    Camera* c;
+
+    QTcpSocket *client;
 
 private:
-    int nbTick = 0;
-    int m_frame = 0;
-    int season, day;
-    point* particules;
     bool master = false;
-
+    int m_frame;
     QImage m_image;
-    point *p;
+    Point *p;
+
+
     int carte=1;
+
+
     int maj = 20;
 
     QTimer *timer;
-    QTimer *timerFPS;
+    QTimer *timerParticule;
+    QString *allSeasons;
+
+    int currentSeason;
+
+    Particule **particules;
+
+    bool light;
+
+public slots:
+    void connected();
+    void disconnected();
+    void readyRead();
+
 };
-
-
 
 #endif // TRIANGLEWINDOW_H

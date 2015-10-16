@@ -63,6 +63,7 @@ public:
 
 public slots:
     void renderNow();
+
 protected:
 
     bool event(QEvent *event);
