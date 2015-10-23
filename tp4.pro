@@ -1,4 +1,4 @@
-QMAKE_MAC_SDK = macosx10.10
+QMAKE_MAC_SDK = macosx10.11
 QT       += network
 QMAKE_CXXFLAGS += -stdlib=libc++ -std=c++11
 

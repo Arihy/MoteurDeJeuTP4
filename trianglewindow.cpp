@@ -24,6 +24,7 @@ TriangleWindow::TriangleWindow(quint16 port)
 
     connectToServer(port);
 }
+
 TriangleWindow::TriangleWindow(int _maj, quint16 port)
 {
 
@@ -53,6 +54,10 @@ TriangleWindow::TriangleWindow(int _maj, quint16 port)
     currentSeason = 0;
 
     light = false;
+
+    winterTree = new FileManager(":/wintertree.ply");
+    summerTree = new FileManager(":/summertree.ply");
+    springTree = new FileManager(":/springtree.ply");
 
     connectToServer(port);
 }
@@ -128,6 +133,8 @@ void TriangleWindow::initialize()
 
     loadMap(":/heightmap-2.png");
 
+    initTrees();
+
     initParticules();
 }
 
@@ -154,6 +161,25 @@ void TriangleWindow::loadMap(QString localPath)
             p[id].y = (float)j/(m_image.height()) - ((float)m_image.height()/2.0)/m_image.height();
             p[id].z = 0.001f * (float)(qRed(pixel));
         }
+    }
+}
+
+void TriangleWindow::initTrees()
+{
+    nbTree = rand() % 5 + 5;
+
+    posTrees = new Point[nbTree];
+
+    for(int i = 0; i < nbTree; i++)
+    {
+        int x = rand() % m_image.width();
+        int y = rand() % m_image.height();
+
+        uint id = x*m_image.width() +y;
+
+        posTrees[i].x = p[id].x;
+        posTrees[i].y = p[id].y;
+        posTrees[i].z = p[id].z;
     }
 }
 
@@ -213,6 +239,15 @@ void TriangleWindow::render()
     {
     case 0:
         displayTrianglesTexture();
+        if(allSeasons[currentSeason] == "WINTER")
+            for(int i = 0; i < nbTree; i++)
+                drawModel(winterTree, 0.05, posTrees[i], QColor(255, 255, 255));
+        else if(allSeasons[currentSeason] == "SPRING")
+            for(int i = 0; i < nbTree; i++)
+                drawModel(springTree, 0.05, posTrees[i], QColor(0, 255, 0));
+        else if(allSeasons[currentSeason] == "SUMMER")
+            for(int i = 0; i < nbTree; i++)
+                drawModel(summerTree, 0.05, posTrees[i], QColor(0, 255, 0));
         break;
     case 1:
         displayLines();
@@ -646,6 +681,38 @@ void TriangleWindow::displayTrianglesTexture()
     glEnd();
 }
 
+
+void TriangleWindow::drawModel(FileManager *model, float scale, Point position, QColor color)
+{
+    for(int i = 0; i < model->getNbFaces(); i++)
+    {
+        if(model->getNbPointPerFace()[i] == 3)
+        {
+            glColor3f(color.red()/255, color.green()/255, color.blue()/255);
+            glBegin(GL_TRIANGLES);
+            for(int j = 0; j < 3; j++)
+            {
+                glVertex3f(
+                            (scale * model->getPoint(model->getFaces()[i][j]).x) + position.x,
+                            (scale * model->getPoint(model->getFaces()[i][j]).y) + position.y,
+                            (scale * model->getPoint(model->getFaces()[i][j]).z) + position.z);
+            }
+            glEnd();
+        }
+        else if(model->getNbPointPerFace()[i] == 4)
+        {
+            glBegin(GL_QUADS);
+            for(int j = 0; j < 4; j++)
+            {
+                glVertex3f(
+                            (scale * model->getPoint(model->getFaces()[i][j]).x) + position.x,
+                            (scale * model->getPoint(model->getFaces()[i][j]).y) + position.y,
+                            (scale * model->getPoint(model->getFaces()[i][j]).z) + position.z);
+            }
+            glEnd();
+        }
+    }
+}
 
 void TriangleWindow::displayColor(float alt)
 {

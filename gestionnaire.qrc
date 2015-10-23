@@ -5,5 +5,8 @@
         <file>heightmap-3.png</file>
         <file>bureau256.png</file>
         <file>land.jpg</file>
+        <file>springtree.ply</file>
+        <file>summertree.ply</file>
+        <file>wintertree.ply</file>
     </qresource>
 </RCC>

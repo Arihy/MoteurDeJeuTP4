@@ -7,6 +7,7 @@
 #include "camera.h"
 #include "point.h"
 #include "particule.h"
+#include "filemanager.h"
 
 #include <time.h>
 
@@ -42,7 +43,9 @@ public:
     void connectToServer(quint16 port);
     void updateSeason();
     void initParticules();
+    void initTrees();
     void getNormal(Point O, Point X, Point Y);
+    void drawModel(FileManager *model, float scale, Point position, QColor color);
     Camera* c;
 
     QTcpSocket *client;
@@ -68,6 +71,14 @@ private:
     Particule **particules;
 
     bool light;
+
+    int nbTree;
+
+    Point *posTrees;
+
+    FileManager *winterTree;
+    FileManager *summerTree;
+    FileManager *springTree;
 
 public slots:
     void connected();
