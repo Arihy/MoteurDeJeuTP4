@@ -79,6 +79,7 @@ private:
     FileManager *winterTree;
     FileManager *summerTree;
     FileManager *springTree;
+    FileManager *autumnTree;
 
 public slots:
     void connected();

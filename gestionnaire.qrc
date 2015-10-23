@@ -8,5 +8,6 @@
         <file>springtree.ply</file>
         <file>summertree.ply</file>
         <file>wintertree.ply</file>
+        <file>autumntree.ply</file>
     </qresource>
 </RCC>

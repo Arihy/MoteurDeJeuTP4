@@ -58,6 +58,7 @@ TriangleWindow::TriangleWindow(int _maj, quint16 port)
     winterTree = new FileManager(":/wintertree.ply");
     summerTree = new FileManager(":/summertree.ply");
     springTree = new FileManager(":/springtree.ply");
+    autumnTree = new FileManager(":/autumntree.ply");
 
     connectToServer(port);
 }
@@ -248,6 +249,9 @@ void TriangleWindow::render()
         else if(allSeasons[currentSeason] == "SUMMER")
             for(int i = 0; i < nbTree; i++)
                 drawModel(summerTree, 0.05, posTrees[i], QColor(0, 255, 0));
+        else if(allSeasons[currentSeason] == "AUTUMN")
+            for(int i = 0; i < nbTree; i++)
+                drawModel(autumnTree, 0.05, posTrees[i], QColor(0, 255, 0));
         break;
     case 1:
         displayLines();
